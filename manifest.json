@@ -1,0 +1,28 @@
+{
+  "manifest_version": 2,
+  "name": "NetTime",
+  "version": "1.0",
+
+  "description": "Keep track of the total net time you spend on each website. Your Inter-NetTime!",
+  "icons": { "16": "icon.png" },
+
+  "author": "Waseef Shawkat",
+
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content_scripts.js"]
+    }
+  ],
+
+  "chrome_url_overrides": {
+    "newtab": "landing.html"
+  },
+
+  "permissions": ["storage"]
+}
