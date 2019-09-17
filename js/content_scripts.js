@@ -1,6 +1,5 @@
 // sends a message to the background script
 var sendMssg = function() {
-  console.log("sending mssg");
   chrome.runtime.sendMessage({ name: "netTimeTicker" });
 };
 

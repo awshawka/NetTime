@@ -1,9 +1,12 @@
+// fired when message is received from content script
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   chrome.storage.local.get({ ticker: [] }, function(res) {
     let history = res.ticker;
     let last = history[history.length - 1];
     let now = new Date().getTime();
 
+    // if the user has been on the same page since the last call increment the amount of time
+    // instead of creating entry in array
     if (last != null && last.title == sender.tab.title) {
       history[history.length - 1].time += 5;
     } else {
@@ -11,13 +14,14 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         history[history.length - 1].end = now;
       }
 
+      // add a new record now that the tab has changed
       history.push({
         title: sender.tab.title,
         url: sender.tab.url,
         icon: sender.tab.favIconUrl,
         start: now,
         end: null,
-        time: 0
+        time: 5
       });
     }
 
@@ -25,41 +29,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   });
 });
 
-chrome.tabs.onCreated.addListener(function() {
-  chrome.storage.local.get({ ticker: [] }, function(res) {
-    let history = res.ticker;
-    let map = new Map();
-    let arr = [];
-
-    history.forEach(function(row) {
-      if (map.has(row.title)) {
-        let item = map.get(row.title);
-        item.time += row.time;
-        map.set(item.title, item);
-      } else {
-        map.set(row.title, row);
-      }
-    });
-
-    map.forEach(function(key, val) {
-      arr.push(map.get(val));
-    });
-
-    arr.sort(function(x, y) {
-      if (x.time >= y.time) {
-        return x;
-      }
-
-      return y;
-    });
-
-    let sorted = arr.slice(0, 10);
-    localStorage.setItem("ticker", JSON.stringify(sorted));
-  });
-});
-
+// only used for testing purposes
 setInterval(function() {
   chrome.storage.local.clear(function() {
     console.log("storage cleared");
   });
-}, 60000);
+}, 24 * 60 * 60 * 1000);
