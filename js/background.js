@@ -1,4 +1,4 @@
-// fired when message is received from content script
+// fired when message is received from content_script
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   chrome.storage.local.get({ ticker: [] }, function(res) {
     let history = res.ticker;
@@ -10,6 +10,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (last != null && last.title == sender.tab.title) {
       history[history.length - 1].time += 5;
     } else {
+      // end the last record
       if (last != null) {
         history[history.length - 1].end = now;
       }
