@@ -24,8 +24,10 @@ const today = () => {
 };
 
 const roundTime = seconds => {
-  const hours = Math.round(seconds / 3600);
-  const minutes = Math.round((seconds - hours * 3600) / 60);
+  if (seconds === NaN) return "";
+
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds - hours * 3600) / 60);
 
   if (hours > 0) {
     return hours + " h " + minutes + " min.";
@@ -38,8 +40,7 @@ const roundTime = seconds => {
 
 const timePercentage = (elem, total) => {
   const percentage = (elem.count * 5) / total;
-  console.log(percentage);
-  return Math.round(250 * percentage);
+  return Math.floor(250 * percentage);
 };
 
 chrome.storage.local.get(["total_time"], function(res) {
@@ -82,8 +83,6 @@ chrome.storage.local.get(["total_time"], function(res) {
         "</div>";
     });
 
-    console.log(items);
-
     document.getElementsByClassName("total-time")[0].innerHTML = roundTime(
       time_count
     );
@@ -91,4 +90,67 @@ chrome.storage.local.get(["total_time"], function(res) {
     document.getElementById("date").innerHTML = today();
     document.getElementById("used").innerHTML = items;
   });
+});
+
+var ctx = document.getElementById("chart").getContext("2d");
+var myChart = new Chart(ctx, {
+  type: "bar",
+  data: {
+    labels: [
+      "12 AM",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "6 AM",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "12 PM",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "6 PM",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    datasets: [
+      {
+        data: [12, 19, 3, 5],
+        backgroundColor: ["rgba(54, 162, 235, 1)"],
+        borderColor: ["rgba(54, 162, 235, 1)"],
+        borderWidth: 1
+      }
+    ]
+  },
+  options: {
+    legend: {
+      display: false
+    },
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true
+          }
+        }
+      ],
+      xAxes: [
+        {
+          ticks: {
+            maxRotation: 0,
+            minRotation: 0
+          }
+        }
+      ]
+    }
+  }
 });
