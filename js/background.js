@@ -51,8 +51,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 });
 
 // only used for testing purposes
-setInterval(function() {
-  chrome.storage.local.clear(function() {
-    console.log("storage cleared");
-  });
-}, 100000);
+// setInterval(function() {
+//   chrome.storage.local.clear(function() {
+//     console.log("storage cleared");
+//   });
+// }, 1000);
