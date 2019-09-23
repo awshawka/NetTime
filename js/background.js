@@ -1,28 +1,22 @@
 // fired when message is received from content_script
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   chrome.storage.local.get({ ticker: [] }, function(res) {
-    if (sender.tab.title != undefined || sender.tab.title != "undefined") {
-      let history = res.ticker == null ? [] : res.ticker;
-      let found = false;
+    let history = res.ticker == null ? [] : res.ticker;
+    let found = false;
 
-    // if the user has been on the same page since the last call increment the amount of time
-    // instead of creating entry in array
-    if (last != null && last.title == sender.tab.title) {
-      history[history.length - 1].time += 5;
-    } else {
-      // end the last record
-      if (last != null) {
-        history[history.length - 1].end = now;
+    for (let i = 0; i < history.length; i++) {
+      if (history[i].icon == sender.tab.favIconUrl) {
+        history[i].count += 1;
+        found = true;
+        break;
       }
+    }
 
-      // add a new record now that the tab has changed
+    if (!found) {
       history.push({
         title: sender.tab.title,
-        url: sender.tab.url,
         icon: sender.tab.favIconUrl,
-        start: now,
-        end: null,
-        time: 5
+        count: 1
       });
     }
   });
@@ -40,6 +34,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     }
 
     chrome.storage.local.set({ ticker: history });
+    chrome.storage.local.get(["total_time"], function(time) {
+      chrome.storage.local.set({
+        total_time: time.total_time == null ? 1 : time.total_time + 1
+      });
+    });
   });
 
   let date = new Date();
@@ -56,4 +55,4 @@ setInterval(function() {
   chrome.storage.local.clear(function() {
     console.log("storage cleared");
   });
-}, 24 * 60 * 60 * 1000);
+}, 100000);
