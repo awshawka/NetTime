@@ -43,6 +43,12 @@ const timePercentage = (elem, total) => {
   return Math.floor(250 * percentage);
 };
 
+const generateBackgroundColor = () => {
+  let arr = [];
+  for (let i = 0; i < 23; i++) {
+    arr.push("rgba(0, 122, 255, 1)");
+  }
+};
 chrome.storage.local.get(["total_time"], function(res) {
   let time_count = res.total_time * 5;
 
@@ -91,66 +97,68 @@ chrome.storage.local.get(["total_time"], function(res) {
     document.getElementById("used").innerHTML = items;
   });
 });
-
 var ctx = document.getElementById("chart").getContext("2d");
-var myChart = new Chart(ctx, {
-  type: "bar",
-  data: {
-    labels: [
-      "12 AM",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "6 AM",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "12 PM",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "6 PM",
-      "",
-      "",
-      "",
-      "",
-      ""
-    ],
-    datasets: [
-      {
-        data: [12, 19, 3, 5],
-        backgroundColor: ["rgba(54, 162, 235, 1)"],
-        borderColor: ["rgba(54, 162, 235, 1)"],
-        borderWidth: 1
-      }
-    ]
-  },
-  options: {
-    legend: {
-      display: false
-    },
-    scales: {
-      yAxes: [
-        {
-          ticks: {
-            beginAtZero: true
-          }
-        }
+
+chrome.storage.local.get({ hours: [] }, function(res) {
+  var myChart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: [
+        "12 AM",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "6 AM",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "12 PM",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "6 PM",
+        "",
+        "",
+        "",
+        "",
+        ""
       ],
-      xAxes: [
+      datasets: [
         {
-          ticks: {
-            maxRotation: 0,
-            minRotation: 0
-          }
+          data: res.hours,
+          backgroundColor: generateBackgroundColor(),
+          borderColor: generateBackgroundColor(),
+          borderWidth: 1
         }
       ]
+    },
+    options: {
+      legend: {
+        display: false
+      },
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true
+            }
+          }
+        ],
+        xAxes: [
+          {
+            ticks: {
+              maxRotation: 0,
+              minRotation: 0
+            }
+          }
+        ]
+      }
     }
-  }
+  });
 });
