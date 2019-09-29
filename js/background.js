@@ -1,7 +1,7 @@
 // fired when message is received from content_script
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   chrome.storage.local.get({ ticker: [] }, function(res) {
-    if (sender.tab.title != undefined) {
+    if (sender.tab.title != undefined || sender.tab.title != "undefined") {
       let history = res.ticker == null ? [] : res.ticker;
       let found = false;
 
@@ -39,7 +39,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         timeSpent.push(0);
       }
     } else {
-      timeSpent[new Date().getHours()]++;
+      timeSpent[new Date().getHours()] += 5 / 60;
     }
 
     console.log(timeSpent);
