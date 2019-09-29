@@ -4,7 +4,7 @@
   "version": "1.0",
 
   "description": "Keep track of the total net time you spend on each website. Your Inter-NetTime!",
-  "icons": { "16": "img/icon.png" },
+  "icons": { "16": "img/clock.png" },
 
   "author": "Waseef Shawkat",
 

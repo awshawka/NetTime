@@ -49,7 +49,6 @@
 
 .info {
   width: 375px;
-  height: 35px;
   display: inline-flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -61,6 +60,7 @@
 .info:last-child {
   padding-bottom: 5px;
 }
+
 .icon {
   width: 20px;
   margin-left: 10px;
@@ -78,17 +78,19 @@
 .web-title {
   font-family: HelveticaNeue;
   font-size: 12px;
+  width: 375px;
+  padding-right: 10px;
   font-weight: normal;
   font-style: normal;
   font-stretch: normal;
   line-height: normal;
   letter-spacing: normal;
-  text-align: center;
+  text-align: left;
   color: #4a4a4a;
+  overflow-wrap: break-word;
 }
 
 .total-time {
-  width: 161px;
   height: 37px;
   font-family: HelveticaNeue;
   font-size: 32px;
@@ -108,6 +110,7 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+  margin-top: 5px;
 }
 
 .time-bar {
@@ -131,8 +134,8 @@
 
 .bottom-border {
   width: 360px;
-  border-bottom: solid 1px #979797;
-  margin-top: 3px;
+  border-bottom: solid 1px #d8d8d8;
+  margin-top: 10px;
   border-radius: 7px;
 }
 

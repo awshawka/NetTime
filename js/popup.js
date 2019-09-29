@@ -2,6 +2,21 @@ chrome.storage.local.get({ ticker: [] }, function(res) {
   let history = res.ticker;
   let map = new Map();
   let arr = [];
+  for (let i = 0; i < 24; i++) {
+    arr.push("rgba(0, 122, 255, 0.6)");
+  }
+
+  return arr;
+};
+
+const shortenLink = title => {
+  let str = new String(title);
+
+  return str.length < 50 ? str : str.substr(0, 30) + " ...";
+};
+
+chrome.storage.local.get(["total_time"], function(res) {
+  let time_count = res.total_time * 5;
 
   console.log(history);
 
@@ -29,14 +44,70 @@ chrome.storage.local.get({ ticker: [] }, function(res) {
     return y;
   });
 
-  let sorted = arr.slice(0, 5);
-  let html = "";
-
-  sorted.forEach(function(key, val) {
-    html += '<div class="info">';
-    html += '<img src="' + key.icon + '" width="20px" />';
-    html += '<span class="time">' + key.time + " s" + "</span>";
-    html += "</div>";
+chrome.storage.local.get({ hours: [] }, function(res) {
+  var myChart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: [
+        "12 AM",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "6 AM",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "12 PM",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "6 PM",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      datasets: [
+        {
+          data: res.hours,
+          backgroundColor: generateBackgroundColor(),
+          borderColor: generateBackgroundColor(),
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      legend: {
+        display: false
+      },
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+              min: 0,
+              max: 60,
+              stepSize: 10
+            }
+          }
+        ],
+        xAxes: [
+          {
+            ticks: {
+              maxRotation: 0,
+              minRotation: 0
+            }
+          }
+        ]
+      }
+    }
   });
 
   document.getElementsByClassName("wrapper")[0].innerHTML = html;
