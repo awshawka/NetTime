@@ -3,8 +3,6 @@ var sendMssg = function() {
   chrome.runtime.sendMessage({ name: "netTimeTicker" });
 };
 
-// this is fired upon page load
-sendMssg();
 var ticker = setInterval(sendMssg, 30000);
 
 // keep ticking only if the tab is in focus

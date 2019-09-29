@@ -26,7 +26,7 @@ chrome.storage.local.get(["total_hits"], function(res) {
         "</span>" +
         "<div class='time'>" +
         "<div class='time-bar' style='width:" +
-        timePercentage(element.time * 30, time_count) +
+        timePercentage(element.count * 30, time_count * 30) +
         "px'></div>" +
         "<span class='time-data'>" +
         roundTime(element.count) +
@@ -73,9 +73,9 @@ const today = () => {
 };
 
 const roundTime = count => {
-  const seconds = count * 30;
-  if (seconds === NaN) return "";
+  if (count === NaN || count == null) return "";
 
+  const seconds = count * 30;
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds - hours * 3600) / 60);
 
@@ -89,7 +89,10 @@ const roundTime = count => {
 };
 
 const timePercentage = (elem, total) => {
+  console.log(elem);
+  console.log(total);
   const percentage = elem / total;
+  console.log(percentage);
   return Math.floor(250 * percentage);
 };
 
@@ -140,7 +143,7 @@ const drawGraph = id => {
 
 const formatHours = hits => {
   const minutes = hits.map(val => {
-    return val * 0.5;
+    return Math.round(val * 0.5);
   });
 
   return minutes;
