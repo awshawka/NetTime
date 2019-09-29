@@ -1,10 +1,10 @@
-chrome.storage.local.get(["total_time"], function(res) {
-  let time_count = res.total_time * 5;
+chrome.storage.local.get(["total_hits"], function(res) {
+  // each hit = 30 seconds hence multiply
+  let time_count = res.total_hits;
 
-  chrome.storage.local.get({ ticker: [] }, function(res) {
-    let countMap = res.ticker;
-
-    countMap.sort((a, b) => {
+  chrome.storage.local.get({ hits: [] }, function(res) {
+    let items = "";
+    let countMap = res.hits.sort((a, b) => {
       if (a.count < b.count) {
         return 1;
       } else if (a.count == b.count) {
@@ -14,7 +14,6 @@ chrome.storage.local.get(["total_time"], function(res) {
       }
     });
 
-    let items = "";
     countMap.forEach(element => {
       items +=
         "<div class='info'>" +
@@ -27,10 +26,10 @@ chrome.storage.local.get(["total_time"], function(res) {
         "</span>" +
         "<div class='time'>" +
         "<div class='time-bar' style='width:" +
-        timePercentage(element, time_count) +
+        timePercentage(element.time * 30, time_count) +
         "px'></div>" +
         "<span class='time-data'>" +
-        roundTime(element.count * 5) +
+        roundTime(element.count) +
         "</span>" +
         "</div>" +
         "<div class='bottom-border'></div>" +
@@ -73,7 +72,8 @@ const today = () => {
   );
 };
 
-const roundTime = seconds => {
+const roundTime = count => {
+  const seconds = count * 30;
   if (seconds === NaN) return "";
 
   const hours = Math.floor(seconds / 3600);
@@ -89,21 +89,21 @@ const roundTime = seconds => {
 };
 
 const timePercentage = (elem, total) => {
-  const percentage = (elem.count * 5) / total;
+  const percentage = elem / total;
   return Math.floor(250 * percentage);
 };
 
 const drawGraph = id => {
   var ctx = document.getElementById(id).getContext("2d");
 
-  chrome.storage.local.get({ hours: [] }, function(res) {
+  chrome.storage.local.get({ hitsPerHour: [] }, function(res) {
     new Chart(ctx, {
       type: "bar",
       data: {
         labels: generateLabels(),
         datasets: [
           {
-            data: res.hours,
+            data: formatHours(res.hitsPerHour),
             backgroundColor: generateBackgroundColor(),
             borderColor: generateBackgroundColor()
           }
@@ -136,6 +136,14 @@ const drawGraph = id => {
       }
     });
   });
+};
+
+const formatHours = hits => {
+  const minutes = hits.map(val => {
+    return val * 0.5;
+  });
+
+  return minutes;
 };
 
 const generateBackgroundColor = () => {

@@ -5,7 +5,7 @@ var sendMssg = function() {
 
 // this is fired upon page load
 sendMssg();
-var ticker = setInterval(sendMssg, 5000);
+var ticker = setInterval(sendMssg, 30000);
 
 // keep ticking only if the tab is in focus
 document.addEventListener(
@@ -16,7 +16,7 @@ document.addEventListener(
       sendMssg();
       // re-start the ticker
       // TODO: make the delay value configurable
-      ticker = setInterval(sendMssg, 5000);
+      ticker = setInterval(sendMssg, 30000);
     } else {
       // clear the timer
       clearInterval(ticker);
