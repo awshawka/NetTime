@@ -1,7 +1,7 @@
+const date = new Date();
+
 // fired when message is received from content_script
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  const date = new Date();
-
   // update the hits
   chrome.storage.local.get({ hits: [] }, function(res) {
     let hits = res.hits == null ? [] : res.hits;
@@ -51,9 +51,16 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       total_hits: time.total_hits == null ? 1 : time.total_hits + 1
     });
   });
+});
 
-  // if midnight and called within the first minute clear the storage
-  if (date.getHours() == 0 && date.getSeconds() <= 60) {
+chrome.alarms.create("clearData", {
+  when:
+    date.getUTCMilliseconds() +
+    (new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1) - date)
+});
+
+chrome.alarms.onAlarm.addListener(alarm => {
+  if (alarm.name == "clearData") {
     chrome.storage.local.clear(function() {
       console.debug("storage cleared");
     });
