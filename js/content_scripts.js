@@ -1,8 +1,10 @@
 // sends a message to the background script
 var sendMssg = function() {
-  chrome.runtime.sendMessage({ name: "netTimeTicker" });
+  chrome.runtime.sendMessage({ name: "NetTimeTicker" });
 };
 
+// send a message every 30 seconds
+// TODO: make this value configurable
 var ticker = setInterval(sendMssg, 30000);
 
 // keep ticking only if the tab is in focus
