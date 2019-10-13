@@ -58,20 +58,24 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
   // update the last update time
   chrome.storage.local.get(["last_update"], function(update) {
-    let lastUpdate = new Date().setUTCMilliseconds(
-      update.last_update == null
-        ? date.getUTCMilliseconds()
-        : parseInt(update.lastUpdate)
-    );
+    let lastUpdate = new Date();
+
+    if (update.last_update == null) {
+      // set the last updated time to now for next time
+      chrome.storage.local.set({ last_update: date.getUTCMilliseconds() });
+      return;
+    } else {
+      lastUpdate.setUTCMilliseconds(parseInt(update.last_update));
+    }
 
     // if saved on different days then clear it
     if (lastUpdate.getDay() != date.getDay()) {
       chrome.storage.local.clear(() => {
         console.log("storage cleared");
       });
-    }
 
-    // set the last updated time
-    chrome.storage.local.set({ last_update: date.getUTCMilliseconds() });
+      // set the last updated time
+      chrome.storage.local.set({ last_update: date.getUTCMilliseconds() });
+    }
   });
 });

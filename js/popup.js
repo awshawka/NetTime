@@ -95,10 +95,11 @@ const drawGraph = id => {
               console.log(data);
 
               return (
+                " " +
                 formatAMPM(toolTipItem.index) +
-                "-" +
+                " - " +
                 toolTipItem.yLabel +
-                "min."
+                " min."
               );
             }
           },
@@ -159,7 +160,7 @@ const generateLabels = () => {
 
 // roundTime to the nearest minute
 const roundTime = count => {
-  if (count === NaN || count == null) return "No Data";
+  if (count === NaN || count == null) return "0 sec.";
 
   const seconds = count * 30;
   const hours = Math.floor(seconds / 3600);
